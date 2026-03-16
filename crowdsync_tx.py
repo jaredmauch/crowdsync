@@ -126,6 +126,16 @@ class OokTransmitter:
 
 
 
+def bytes_to_bits(byte_list: List[int], msb_first: bool = True) -> List[int]:
+    """Convert a list of byte values (0–255) to a list of bits."""
+    bits: List[int] = []
+    for byte_val in byte_list:
+        for bit_index in range(8):
+            shift = 7 - bit_index if msb_first else bit_index
+            bits.append((byte_val >> shift) & 0x01)
+    return bits
+
+
 def hex_to_bits(hex_string: str, msb_first: bool = True) -> List[int]:
     """
     Convert a hex string (e.g. 'A5F0') to a list of bits.
@@ -214,14 +224,29 @@ def parse_args(argv: List[str]) -> argparse.Namespace:
         action="store_false",
         help="Interpret hex payload bits LSB→MSB within each byte.",
     )
+    parser.add_argument(
+        "--scan",
+        action="store_true",
+        help="Scan data space: send 4-byte frames (prefix 0x03 or 0x04 + 24-bit counter 0x000000–0xffffff), print progress every 0x100.",
+    )
+    parser.add_argument(
+        "--scan-prefix",
+        type=int,
+        choices=(3, 4),
+        default=3,
+        help="First byte of each 4-byte frame in scan mode (default: 3).",
+    )
 
     args = parser.parse_args(argv)
 
-    if args.hex_payload is None and args.pattern is None:
-        parser.error("you must provide either --hex or --pattern")
-
-    if args.hex_payload is not None and args.pattern is not None:
-        parser.error("use either --hex or --pattern, not both")
+    if args.scan:
+        if args.hex_payload is not None or args.pattern is not None:
+            parser.error("do not use --hex or --pattern with --scan")
+    else:
+        if args.hex_payload is None and args.pattern is None:
+            parser.error("you must provide either --hex, --pattern, or --scan")
+        if args.hex_payload is not None and args.pattern is not None:
+            parser.error("use either --hex or --pattern, not both")
 
     if not (1 <= args.bitrate <= 5000):
         parser.error("bitrate must be between 1 and 5000 bps")
@@ -240,20 +265,45 @@ def build_bit_sequence(args: argparse.Namespace) -> List[int]:
     return [1 if c == "1" else 0 for c in pattern]
 
 
+def run_scan(args: argparse.Namespace, tx: OokTransmitter) -> None:
+    """Send 4-byte frames: prefix (0x03 or 0x04) then 24-bit value 0x000000–0xffffff; print every 0x100."""
+    prefix = args.scan_prefix
+    progress_interval = 0x100
+
+    for value in range(0x1000000):
+        frame = [
+            prefix,
+            (value >> 16) & 0xFF,
+            (value >> 8) & 0xFF,
+            value & 0xFF,
+        ]
+        bits = bytes_to_bits(frame, msb_first=args.msb_first)
+        tx.send_bits(bits, repeat=args.repeat, gap_bits=args.gap_bits)
+
+        if value % progress_interval == 0:
+            print(f"Scan 0x{value:06X} / 0xFFFFFF")
+
+    print("Scan complete.")
+
+
 def main(argv: List[str]) -> int:
     try:
         args = parse_args(argv)
-        bits = build_bit_sequence(args)
     except SystemExit:
-        # argparse already printed an error
         return 1
     except Exception as exc:
         print(f"Error: {exc}", file=sys.stderr)
         return 1
 
-    if not bits:
-        print("No bits to transmit (empty payload).", file=sys.stderr)
-        return 1
+    if not args.scan:
+        try:
+            bits = build_bit_sequence(args)
+        except Exception as exc:
+            print(f"Error: {exc}", file=sys.stderr)
+            return 1
+        if not bits:
+            print("No bits to transmit (empty payload).", file=sys.stderr)
+            return 1
 
     try:
         tx = OokTransmitter(
@@ -268,17 +318,25 @@ def main(argv: List[str]) -> int:
         print(f"Failed to initialize transmitter: {exc}", file=sys.stderr)
         return 1
 
-    print(
-        f"Transmitting {len(bits)} bits at {args.bitrate} bps "
-        f"(data=GPIO {args.pin}, enable=GPIO {args.enable_pin}), "
-        f"repeat={args.repeat}, gap_bits={args.gap_bits}..."
-    )
     try:
-        tx.send_bits(bits, repeat=args.repeat, gap_bits=args.gap_bits)
+        if args.scan:
+            print(
+                f"Scan mode: 4-byte frames (prefix=0x{args.scan_prefix:02X}, "
+                f"counter 0x000000–0xFFFFFF) at {args.bitrate} bps, "
+                f"repeat={args.repeat}, gap_bits={args.gap_bits}. Progress every 0x100."
+            )
+            run_scan(args, tx)
+        else:
+            print(
+                f"Transmitting {len(bits)} bits at {args.bitrate} bps "
+                f"(data=GPIO {args.pin}, enable=GPIO {args.enable_pin}), "
+                f"repeat={args.repeat}, gap_bits={args.gap_bits}..."
+            )
+            tx.send_bits(bits, repeat=args.repeat, gap_bits=args.gap_bits)
+            print("Done.")
     finally:
         tx.cleanup()
 
-    print("Done.")
     return 0
 
 
