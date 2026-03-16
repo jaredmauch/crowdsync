@@ -1,0 +1,2820 @@
+CMT2210LC 
+
+CMT2210LC 
+
+Low Power 315/433.92 MHz OOK Receiver 
+
+Features 
+
+Application 
+
+  Operation Frequency: 315 / 433.92 MHz 
+
+  OOK Demodulation 
+
+  Data Rate: 1.0 - 5.0 kbps 
+
+  Sensitivity: -109 dBm (3.0 kbps, 0.1％  BER) 
+
+  Receiver Bandwidth: 330 kHz 
+
+ 
+
+Large Signal Handling: 10 dBm 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+Low-Cost Consumer Electronics Applications 
+
+Home and Building Automation 
+
+Infrared Receiver Replacements 
+
+Industrial Monitoring and Controls 
+
+Remote Automated Meter Reading 
+
+Remote Lighting Control System 
+
+  Periodically  operating  (2s/3ms),  no  external  MCU  control 
+
+  Wireless Alarm and Security Systems 
+
+required 
+
+ 
+
+Remote Keyless Entry (RKE) 
+
+  No Register Configuration Required 
+
+  Suppy voltage: 1.8 -3.6 V 
+
+ 
+
+Low Power Consumption: 
+
+  3.3 mA @ 315 MHz 
+
+  3.8 mA @ 433.92 MHz 
+
+  RoHS Compliant 
+
+  SOP8 Package 
+Descriptions 
+
+The  CMT2210LC  is  a  low  power,  high  performance 
+
+OOK  stand-alone  RF  receiver  for  315/433.92  MHz 
+
+wireless  applications.  It  is  part  of  the  CMOSTEK 
+NextGenRFTM family, which includes a complete line of 
+transceivers.  The 
+transmitters, 
+
+receivers  and 
+
+CMT2210LC is a true plug-and-run device, no register 
+
+configuration  and  manually-tune  is  required.  The 
+
+device  operates  at  either  315  MHz  or  433.92  MHz 
+
+through  selecting  a  19.7008  MHz  or  27.1383  MHz 
+
+crystal, the data rate is optimized to 1 - 5 kbps which 
+
+fits  well  with  the  low-end  data  encoder  or  a  MCU 
+
+based transmitter. It consumes 3.3 mA current at 315 
+
+MHz and 3.8 mA at 433.92 MHz while achieving -109 
+
+dBm  receiving  sensitivity.  The  SOP8  package  is 
+
+available for easier and lower-cost manufacturing. The 
+
+CMT2210LC  receiver  together  with  the  CMT21xx 
+
+transmitter  enables  an  ultra-low  cost  RF  link.  For 
+NextGenRFTM  receivers  with  more  flexibility,  the  user 
+can use the CMT2210AW. 
+
+Ordering Information 
+
+Part Number 
+
+Frequency 
+
+Package 
+
+MOQ 
+
+CMT2210LC-ESR 
+
+315/433.92MHz 
+
+SOP8/T&R 
+
+2,500 pcs 
+
+CMT2210LC-ESB 
+
+315/433.92 MHz 
+
+SOP8/Tube 
+
+1,000 pcs 
+
+More Ordering Info: See Page 15 
+
+SOP8 PACKAGE 
+
+CMT2210LC TOP VIEW 
+
+Copyright ©  By CMOSTEK 
+
+Rev 0.9 | Page 1/20 
+
+www.cmostek.com 
+
+GND
+
+VDD
+
+DOUT
+
+SDN
+
+1
+
+2
+
+3
+
+4
+
+8
+
+7
+
+6
+
+5
+
+RFIN
+
+NC
+
+NC
+
+XIN
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Typical Application 
+
+CMT2210LC 
+
+Figure 1. CMT2210LC Typical Application Schematic of Enhanced Anti-interference 
+
+Table 1. BOM of Enhanced Anti-interference Typical Application 
+
+Designator 
+
+Descriptions 
+
+CMT2210LC, low power 315/433.92 MHz 
+OOK receiver 
+
+Value  (Match  to  λ/4  ANT) 
+
+315 MHz 
+
+433.92 MHz 
+
+      Unit 
+
+Manufacturer 
+
+- 
+
+- 
+
+CMOSTEK 
+
+U1 
+
+X1 
+
+L1 
+
+C0 
+
+C1 
+
+L2 
+
+C2 
+
+C3 
+
+C4 
+
+±20 ppm, SMD32*25 mm, crystal  
+
+19.7008 
+
+27.1383 
+
+MHz 
+
+EPSON 
+
+±5%, 0603 multi -layer chip inductor 
+
+±0.25 pF, 0 402 NP0, 50 V   
+
+±0.25 pF, 0402 NP0, 50 V   
+
+±5%, 0603 multi -layer chip inductor, 
+
+optional 
+
+±0.25 pF, 0402 NP0, 50 V , optional 
+
+±20%, 0402 X7R, 25 V   
+
+±20%, 0603 NP0, 50 V   
+
+39 
+
+3.6 
+
+3.6 
+
+22 
+
+12 
+
+33 
+
+NA 
+
+2.7 
+
+22 
+
+6.2 
+
+0.1 
+
+1 
+
+nH 
+
+pF 
+
+pF 
+
+nH 
+
+pF 
+
+uF 
+
+nF 
+
+Murata LQG18 
+
+Murata GRM15 
+
+Murata GRM15 
+
+Murata LQG18 
+
+Murata GRM15 
+
+Murata GRM15 
+
+Murata GRM15 
+
+Rev 0.9 | Page 2/20 
+
+www.cmostek.com 
+
+ANT
+
+C1
+
+L1
+
+C0
+
+C2
+
+L2
+
+VDD
+
+DOUT
+
+SDN
+
+C4
+
+C3
+
+1
+
+2
+
+3
+
+4
+
+GND
+
+RFIN
+
+VDD
+
+DOUT
+
+SDN
+
+NC
+
+NC
+
+XIN
+
+8
+
+7
+
+6
+
+5
+
+X1
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+CMT2210LC 
+
+Abbreviations 
+
+Abbreviations used in this data sheet are described below 
+
+AGC 
+
+AN 
+
+BER 
+
+BOM 
+
+BSC 
+
+BW 
+
+DC 
+
+Automatic Gain Control 
+
+Application Notes 
+
+Bit Error Rate 
+
+Bill of Materials 
+
+Basic Spacing between Centers 
+
+Bandwidth 
+
+Direct Current 
+
+PC 
+
+PCB 
+
+PLL 
+
+PN9 
+
+POR 
+
+PUP 
+
+QFN 
+
+Personal Computer 
+
+Printed Circuit Board 
+
+Phase Lock Loop 
+
+Pseudorandom Noise 9 
+
+Power On Reset 
+
+Power Up 
+
+Quad Flat No-lead 
+
+EEPROM 
+
+Electrically Erasable Programmable Read-Only 
+
+RF 
+
+Radio Frequency 
+
+ESD 
+
+ESR 
+
+IF 
+
+LNA 
+
+LO 
+
+Memory 
+
+Electro-Static Discharge 
+
+Equivalent Series Resistance 
+
+Intermediate Frequency 
+
+Low Noise Amplifier 
+
+Local Oscillator 
+
+LPOSC 
+
+Low Power Oscillator 
+
+Max 
+
+MCU 
+
+Min 
+
+MOQ 
+
+NP0 
+
+NC 
+
+OOK 
+
+Maximum 
+
+Microcontroller Unit 
+
+Minimum 
+
+Minimum Order Quantity 
+
+Negative-Positive-Zero 
+
+Not Connected 
+
+On-Off Keying 
+
+RFPDK 
+
+RF Products Development Kit 
+
+RoHS 
+
+RSSI 
+
+Rx 
+
+SAR 
+
+SOP 
+
+SPI 
+
+TH 
+
+Tx 
+
+Typ 
+
+VCO 
+
+XOSC 
+
+Restriction of Hazardous Substances 
+
+Received Signal Strength Indicator 
+
+Receiving, Receiver 
+
+Successive Approximation Register 
+
+Small Outline Package 
+
+Serial Port Interface 
+
+Threshold 
+
+Transmission, Transmitter 
+
+Typical 
+
+Voltage Controlled Oscillator 
+
+Crystal Oscillator 
+
+XTAL/Xtal 
+
+Crystal 
+
+Rev 0.9 | Page 3/20 
+
+www.cmostek.com 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+CMT2210LC 
+
+Table of Contents 
+
+1.  Electrical Characteristics ............................................................................................................................................ 5 
+
+1.1  Recommended Operation Conditions ................................................................................................................... 5 
+1.2  Absolute Maximum Ratings................................................................................................................................... 5 
+1.3  Receiver Specifications ......................................................................................................................................... 6 
+1.4  Crystal Oscillator ................................................................................................................................................... 6 
+
+2.  Pin Descriptions .......................................................................................................................................................... 7 
+
+3.  Typical Performance Characteristics ......................................................................................................................... 8 
+
+4.  Typical Application Schematic ................................................................................................................................... 9 
+
+5.  Functional Descriptions ............................................................................................................................................ 10 
+
+5.1  Overview ............................................................................................................................................................. 10 
+5.2  Modulation, Frequency and Data Rate ................................................................................................................ 10 
+Internal Blocks Description .................................................................................................................................. 11 
+5.3 
+RF Front-end and AGC .......................................................................................................................................11 
+5.3.1 
+IF Filter ..................................................................................................................................................................11 
+5.3.2 
+RSSI ......................................................................................................................................................................11 
+5.3.3 
+SAR ADC ..............................................................................................................................................................11 
+5.3.4 
+Crystal Oscillator ..................................................................................................................................................11 
+5.3.5 
+Frequency Synthesizer .......................................................................................................................................12 
+5.3.6 
+5.4  Periodical Operating ............................................................................................................................................ 13 
+
+6.  Ordering Information ................................................................................................................................................. 15 
+
+7.  Package Outline ......................................................................................................................................................... 16 
+
+8.  Top Marking ............................................................................................................................................................... 17 
+
+9.  Other Documentations .............................................................................................................................................. 18 
+
+10. Document Change List.............................................................................................................................................. 19 
+
+11. Contact Information .................................................................................................................................................. 20 
+
+Rev 0.9 | Page 4/20 
+
+www.cmostek.com 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+CMT2210LC 
+
+1.  Electrical Characteristics 
+
+VDD = 3.3 V, TOP = 25  ℃, FRF = 433.92 MHz, sensitivities are measured in receiving a PN9 sequence and matching to 50 Ω 
+impedance, with the BER of 0.1%. All measurements are performed using the  board  CMT2210LC-EM V1.0, unless otherwise 
+
+noted. 
+
+1.1  Recommended Operation Conditions 
+
+Table 2. Recommended Operation Conditions 
+
+Parameter 
+
+Symbol 
+
+Conditions 
+
+Min 
+
+Typ 
+
+Max 
+
+Unit 
+
+Operation Voltage Supply 
+
+Operation Temperature 
+
+Supply Voltage Slew Rate 
+
+VDD 
+
+TOP 
+
+Within -10  ℃  to +85  ℃ 
+
+Within -40  ℃  to +85  ℃ 
+
+1.8 
+
+2.4 
+
+-40 
+
+1 
+
+3.6 
+
+3.6 
+
+85 
+
+V 
+
+V 
+
+℃ 
+
+mV/us 
+
+1.2  Absolute Maximum Ratings 
+
+Table 3. Absolute Maximum Ratings[1] 
+
+Parameter 
+
+Symbol 
+
+Conditions 
+
+VDD 
+
+VIN 
+
+TJ 
+
+TSTG 
+
+TSDR 
+
+Supply Voltage 
+
+Interface Voltage 
+
+Junction Temperature   
+
+Storage Temperature   
+
+Soldering Temperature   
+
+ESD Rating[2] 
+
+Latch-up Current   
+
+Notes: 
+
+Lasts at least 30 seconds 
+
+Human Body Model (HBM) 
+
+@ 85  ℃ 
+
+Min 
+
+-0.3 
+
+-0.3 
+
+-40 
+
+-50 
+
+-2 
+
+-100 
+
+Max 
+
+3.6 
+
+VDD + 0.3 
+
+125 
+
+150 
+
+255 
+
+2 
+
+100 
+
+Unit 
+
+V 
+
+V 
+
+℃ 
+
+℃ 
+
+℃ 
+
+kV 
+
+mA 
+
+[1]. Stresses above those listed as “Absolute Maximum Ratings” may cause permanent damage to the device. This is a 
+
+stress rating only and functional operation of the device under these conditions is not implied. Exposure to maximum 
+
+rating conditions for extended periods may affect device reliability. 
+
+[2]. The CMT2210LC is high-performance RF integrated circuits. Handling and assembly of this device should only be done 
+
+at ESD-protected workstations. 
+
+Caution! ESD sensitive device. Precaution should be used when handling the device in order to 
+
+prevent permanent damage. 
+
+Rev 0.9 | Page 5/20 
+
+www.cmostek.com 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+1.3  Receiver Specifications 
+
+Table 4. Receiver Specifications 
+
+Parameter 
+
+Symbol 
+
+Conditions 
+
+Min 
+
+Typ 
+
+Max  Unit 
+
+CMT2210LC 
+
+Frequency Range 
+
+Data Rate 
+
+Sensitivity 
+
+FRF 
+
+DR 
+
+S315 
+
+Use a 19.7008 MHz crystal 
+
+Use a 27.1383 MHz crystal 
+
+FRF = 315 MHz, DR = 3 kbps, BER = 0.1%   
+
+S433.92 
+
+FRF = 433.92 MHz, DR = 3 kbps, BER = 0.1%   
+
+Saturation Input Signal 
+
+Level   
+
+PLVL 
+
+Working Current 
+
+IDD315 
+
+FRF = 315 MHz 
+
+IDD433.92 
+
+FRF = 433.92 MHz 
+
+Sleep Current 
+
+ISHUTDOWN 
+
+Frequency Synthesizer 
+
+Settle Time 
+
+TLOCK 
+
+Counting from the crystal oscillator settled 
+
+DR = 1 kbps, ±1 MHz offset, CW interference  
+
+Blocking Immunity 
+
+BI 
+
+DR = 1 kbps, ±2 MHz offset,  CW interference 
+
+Input 3rd Order Intercept 
+Point   
+
+IIP3 
+
+Two tone test at 1 MHz and 2 MHz offset 
+
+frequency. Maximum system gain settings 
+
+DR = 1 kbps, ±10 MHz offset, CW interference  
+
+Receiver Bandwidth   
+
+BW315 
+
+FRF = 315 MHz 
+
+BW433.92 
+
+FRF = 433.92 MHz 
+
+Receiver Start-up Time[1]   
+
+TSTART-UP 
+
+From power up to receive 
+
+Note: 
+
+[1]. This parameter is to a large degree crystal dependent. 
+
+1.4  Crystal Oscillator 
+
+Table 5. Crystal Oscillator Specifications 
+
+315 
+
+433.92 
+
+1 
+
+5 
+
+-109 
+
+-109 
+
+10 
+
+3.3 
+
+3.8 
+
+60 
+
+150 
+
+32 
+
+42 
+
+61 
+
+-23 
+
+240 
+
+330 
+
+3 
+
+Conditions 
+
+Min 
+
+Typ 
+
+Max 
+
+Parameter 
+
+Crystal Frequency[1] 
+
+Crystal Tolerance[2] 
+
+Load Capacitance 
+
+Crystal ESR 
+
+XTAL Startup Time[3] 
+
+Notes: 
+
+Symbol 
+
+FXTAL315 
+
+FRF = 315 MHz 
+
+FXTAL433.92 
+
+FRF = 433.92 MHz 
+
+CLOAD 
+
+Rm 
+
+tXTAL 
+
+19.7008 
+
+27.1383 
+
+±20  
+
+15 
+
+400 
+
+60 
+
+MHz 
+
+MHz 
+
+kbps 
+
+dBm 
+
+dBm 
+
+dBm 
+
+mA 
+
+mA 
+
+nA 
+
+us 
+
+dB 
+
+dB 
+
+dB 
+
+dBm 
+
+kHz 
+
+kHz 
+
+ms 
+
+Unit 
+
+MHz 
+
+MHz 
+
+ppm 
+
+pF 
+
+Ω 
+
+us 
+
+[1].  The CMT2210LC can directly work with external reference clock input to XIN pin (a coupling capacitor is required) with 
+
+peak-to-peak amplitude of 0.3 to 0.7 V. 
+
+[2].  This is the total tolerance including: (1) initial tolerance; (2) crystal loading; (3) aging; and (4) temperature dependence. 
+
+The acceptable crystal tolerance depends on RF frequency and channel spacing/bandwidth. 
+
+[3].  This parameter is to a large degree crystal dependent. 
+
+Rev 0.9 | Page 6/20 
+
+www.cmostek.com 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+2.  Pin Descriptions 
+
+CMT2210LC 
+
+Figure 2. CMT2210LC Pin Assignments 
+
+Table 6. CMT2210LC Pin Descriptions   
+
+Pin Number  Name 
+
+I/O 
+
+Description 
+
+1 
+
+2 
+
+3 
+
+4 
+
+5 
+
+6, 7 
+
+8 
+
+GND 
+
+VDD 
+
+I 
+
+I 
+
+Ground 
+
+Power supply input 
+
+DOUT 
+
+O 
+
+Received data output 
+
+SDN 
+
+XIN 
+
+NC 
+
+RFIN 
+
+I 
+
+I 
+
+-- 
+
+I 
+
+Chip on / off control, pull low to enable the receiver, pull high to disable the receiver 
+
+Crystal oscillator input or external reference clock input 
+
+Not connected 
+
+RF signal input to the LNA 
+
+Rev 0.9 | Page 7/20 
+
+www.cmostek.com 
+
+GND
+
+VDD
+
+DOUT
+
+SDN
+
+1
+
+2
+
+3
+
+4
+
+8
+
+7
+
+6
+
+5
+
+RFIN
+
+NC
+
+NC
+
+XIN
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+3.  Typical Performance Characteristics 
+
+CMT2210LC 
+
+Figure 3. Current vs. Voltage, FRF = 
+
+Figure 4. Current vs. Temperature, FRF = 
+
+315/433.92 MHz, DR = 1 kbps 
+
+433.92 MHz, DR = 1 kbps 
+
+Figure 5. Sensitivity vs. Supply Voltage, FRF 
+
+Figure 6. Sensitivity vs. Temperature, FRF = 
+
+= 315/433.92 MHz, DR = 3 kbps, BER = 0.1% 
+
+315/433.92 MHz, VDD = 3.3V, DR = 1 kbps, BER = 0.1% 
+
+Figure 7. Sensitivity vs. DR, FRF = 315/433.92 
+
+Figure 8. Sensitivity vs. BER, FRF = 315/433.92 
+
+MHz, VDD = 3.3 V, BER = 0.1% 
+
+MHz, VDD = 3.3 V, DR = 3 kbps 
+
+Rev 0.9 | Page 8/20 
+
+www.cmostek.com 
+
+Current vs. Supply Voltage
+
+4.20
+
+4.00
+
+3.80
+
+)
+A
+m
+
+(
+
+t
+n
+e
+r
+r
+u
+C
+
+3.60
+
+3.40
+
+3.20
+
+3.00
+
+2.80
+
+2.60
+
+1.6
+
+1.8
+
+2.0
+
+2.2
+
+433.92 MHz
+
+315 MHz
+
+3.2
+
+3.4
+
+3.6
+
+3.8
+
+2.6
+
+2.4
+3.0
+Supply Voltage (V)
+
+2.8
+
+ 
+Current vs. Temperature
+
+）
+A
+m
+（
+t
+n
+e
+r
+r
+u
+C
+
+4.60
+
+4.40
+
+4.20
+
+4.00
+
+3.80
+
+3.60
+
+3.40
+
+3.20
+
+3.00
+
+2.80
+
+2.60
+
+3.6 V
+
+3.3 V
+
+1.8 V
+
+-50
+
+-30
+
+-10
+
+10
+
+30
+50
+Temperature (℃)
+
+70
+
+90
+
+110
+
+Sensitivity vs. Supply Voltage
+
+）
+m
+B
+d
+（
+
+y
+t
+i
+v
+i
+t
+i
+s
+n
+e
+S
+
+-105.0
+
+-106.0
+
+-107.0
+
+-108.0
+
+-109.0
+
+-110.0
+
+-111.0
+
+-112.0
+
+-113.0
+
+-114.0
+
+1.6
+
+1.8
+
+2
+
+2.2
+
+315 MHz
+
+433.92 MHz
+
+3.4
+
+3.6
+
+3.8
+
+4
+
+2.4
+
+2.6
+
+2.8
+Supply Voltage (V)
+
+3
+
+3.2
+
+Sensitivity vs. Temperature
+
+）
+m
+B
+d
+（
+
+y
+t
+i
+v
+i
+t
+i
+s
+n
+e
+S
+
+-106.0
+
+-107.0
+
+-108.0
+
+-109.0
+
+-110.0
+
+-111.0
+
+-112.0
+
+315 MHz
+
+433.92 MHz
+
+-60
+
+-40
+
+-20
+
+0
+40
+20
+Temperature (ºC)
+
+60
+
+80
+
+100
+
+Sensitivity vs. Data Rate
+
+）
+m
+B
+d
+（
+
+y
+t
+i
+v
+i
+t
+i
+s
+n
+e
+S
+
+-104.0
+
+-105.0
+
+-106.0
+
+-107.0
+
+-108.0
+
+-109.0
+
+-110.0
+
+-111.0
+
+-112.0
+
+0
+
+0.5
+
+1
+
+1.5
+
+315 MHz
+
+433.92 MHz
+
+4
+
+4.5
+
+5
+
+5.5
+
+2.5
+
+2
+3.5
+Data Rate（kbps）
+
+3
+
+Sensitivity vs. Bit Error Rate
+
+315 MHz
+
+433.92 MHz
+
+)
+
+m
+B
+d
+(
+
+y
+t
+i
+v
+
+i
+t
+i
+
+s
+n
+e
+S
+
+-108.0
+
+-108.5
+
+-109.0
+
+-109.5
+
+-110.0
+
+-110.5
+
+-111.0
+
+-111.5
+
+-112.0
+
+0.00%
+
+0.01%
+
+0.10%
+
+1.00%
+
+10.00%
+
+100.00%
+
+Bit Error Rate
+
+ 
+ 
+ 
+ 
+ 
+ 
+       
+ 
+ 
+ 
+ 
+       
+ 
+ 
+ 
+ 
+       
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+4.  Typical Application Schematic 
+
+CMT2210LC 
+
+Figure 9. Typical Application Schematic of Enhanced Anti-interference 
+
+Notes: 
+1.  The general layout guidelines are listed below. 
+
+  Use as much continuous ground plane metallization as possible. 
+
+  Avoid using long and/or thin transmission lines to connect the components. 
+
+  Use as many grounding vias (especially near to the GND pins) as possible to minimize series parasitic inductance 
+
+between the ground pour and the GND pins. 
+
+  Place C3 and C4 as close to the CMT2210LC as possible for better filtering. 
+
+  Place the crystal as close to the CMT2210LC as possible, the metal case of crystal needs grounding. 
+
+2.  Based on the chip default settings in factory, the chip is configured as receiving 2s and then resetting for 3ms. Users do not 
+
+need to pull the SDN pin high or low or periodically power on and off to reset the chip regularly. Users can just pull the SDN 
+
+pin low all the time.   
+
+3.  For more design details, please refer to “AN110 CMT221x-5x Schematic and PCB Layout Design Guideline. 
+
+Table 7. BOM of Enhanced Anti-interference Typical Application 
+
+Designator 
+
+Descriptions 
+
+CMT2210LC, low power 315/433.92 MHz 
+OOK receiver 
+
+Value  (Match  to  λ/4  ANT) 
+
+315 MHz 
+
+433.92 MHz 
+
+      Unit 
+
+Manufacturer 
+
+- 
+
+- 
+
+CMOSTEK 
+
+U1 
+
+X1 
+
+L1 
+
+C0 
+
+C1 
+
+L2 
+
+C2 
+
+C3 
+
+C4 
+
+±20 ppm, SMD32*25 mm, crystal  
+
+19.7008 
+
+27.1383 
+
+MHz 
+
+EPSON 
+
+±5%, 0603 multi -layer chip inductor 
+
+±0.25 pF, 0402 NP0, 50 V   
+
+±0.25 pF, 0402 NP0, 50 V   
+
+±5%, 0603 multi -layer chip inductor, 
+
+optional 
+
+±0.25 pF, 0402 NP0, 50 V , optional 
+
+±20%, 0402 X7R, 25 V   
+
+±20%, 0603 NP0, 50 V   
+
+39 
+
+3.6 
+
+3.6 
+
+22 
+
+12 
+
+33 
+
+NA 
+
+2.7 
+
+22 
+
+6.2 
+
+0.1 
+
+1 
+
+nH 
+
+pF 
+
+pF 
+
+nH 
+
+pF 
+
+uF 
+
+nF 
+
+Murata LQG18 
+
+Murata GRM15 
+
+Murata GRM15 
+
+Murata LQG18 
+
+Murata GRM15 
+
+Murata GRM15 
+
+Murata GRM15 
+
+Rev 0.9 | Page 9/20 
+
+www.cmostek.com 
+
+ANT
+
+C1
+
+L1
+
+C0
+
+C2
+
+L2
+
+VDD
+
+DOUT
+
+SDN
+
+C4
+
+C3
+
+1
+
+2
+
+3
+
+4
+
+GND
+
+RFIN
+
+VDD
+
+DOUT
+
+SDN
+
+NC
+
+NC
+
+XIN
+
+8
+
+7
+
+6
+
+5
+
+X1
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+5.  Functional Descriptions 
+
+CMT2210LC 
+
+5.1  Overview 
+
+Figure 10. Functional Block Diagram 
+
+The CMT2210LC is ultra-low power, high performance, and low-cost OOK RF receiver for various 315/433.92 MHz wireless 
+applications. It is part of the CMOSTEK NextGenRFTM family, which includes a complete line of transmitters, receivers and 
+transceivers. The chip is based on fully integrated, low-IF receiver architecture. The low-IF architecture facilitates a very low 
+
+external component count and does not suffer from power line - induced interference problems. The VCO operates at 2x the 
+
+Local Oscillator (LO) frequency to reduce spurious emissions. Every analog block is calibrated on each Power-up to the internal 
+
+reference voltage. The calibration helps the device to finely work under different temperatures and supply voltages. The 
+
+baseband filtering and demodulation is done by the digital demodulator. The demodulated signal is output to the external MCU 
+
+via the DOUT pin.   
+
+The CMT2210LC is a true plug-and-run device, no register control or manufacturing programming is needed. This simplifies the 
+
+development and manufacturing effort significantly. The operation frequency can be changed between 315 and 433.92 MHz by 
+
+selecting proper value of crystal, and it can work with most low end transmitters with its good adaptability. The CMT2210LC 
+
+operates from 1.8 to 3.6 V so that it can finely work with most batteries to their useful power limits. The receive current is only 3.3 
+
+mA at 315 MHz and 3.8 mA at 433.92 MHz. Based on the chip default settings in factory, the chip is configured as receiving 2s 
+
+and then resetting for 3ms. Users do not need to pull the SDN pin high or low or periodically power on and off to reset the chip 
+
+regularly. Users can just pull the SDN pin low all the time. By periodical reset, it can help to further reduce average power 
+
+consumption, and optimize the performance against variance of ambient temperature, supply voltage, etc. The CMT2210LC 
+receiver together with the CMT211x transmitter can offer an ultra-low-cost RF link solution. 
+
+5.2  Modulation, Frequency and Data Rate 
+
+The CMT2210LC supports OOK demodulation with the data rate from 1.0 to 5.0 kbps. It supports the license free ISM 
+
+frequencies around 315 MHz and 433.92 MHz. See the table below for the demodulation, frequency and data rate information. 
+
+Rev 0.9 | Page 10/20 
+
+www.cmostek.com 
+
+RFIN
+
+LNA
+
+I-MXR
+
+Q-MXR
+
+Image 
+Rejection
+Band-pass
+Filter
+
+VCO
+
+VDD
+
+GND
+
+LO GEN
+
+LDOs
+
+Bandgap
+
+POR
+
+SDN
+
+I-LMT
+
+RSSI
+
+SAR
+
+Q-LMT
+
+Loop
+Filter
+
+DIVIDER
+
+AGC
+
+OOK
+DEMOD
+
+AGC
+
+PFD/CP
+
+FXTAL
+
+XOSC
+
+XIN
+
+Radio 
+Controller
+
+DOUT
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+CMT2210LC 
+
+Table 8. Modulation, Frequency and Data Rate 
+
+Parameter 
+
+Demodulation 
+
+Frequency 
+
+Data Rate 
+
+Value 
+
+OOK 
+
+315 / 433.92 
+
+1.0 – 5.0 
+
+Unit 
+
+- 
+
+MHz 
+
+kbps 
+
+5.3  Internal Blocks Description 
+
+5.3.1 RF Front-end and AGC 
+
+The CMT2210LC features a low-IF receiver. The RF front-end of the receiver consists of a Low Noise Amplifier (LNA), I/Q mixer 
+
+and a wide-band power detector. Only a low-cost inductor and a capacitor are required for matching the LNA to any 50 Ω 
+
+antennas. The input RF signal induced on the antenna is amplified and down-converted to the IF frequency for further 
+
+processing.   
+
+By means of the wide-band power detector and the attenuation networks built around the LNA, the Automatic Gain Control (AGC) 
+
+loop regulates the RF front-end’s gain to get the best system linearity, selectivity and sensitivity performance, even though the 
+
+receiver suffers from strong out-of-band interference. 
+
+With a low cost inductor and a capacitor, the input of the LNA can be matched to a 50 Ω antenna or other common used 
+
+antennas. 
+
+5.3.2 IF Filter 
+
+The signals coming from the RF front-end are filtered by the fully integrated 3rd-order band-pass image rejection IF filter. The IF 
+center frequency is dynamically adjusted to enable the IF filter to locate to the right frequency band, thus the receiver sensitivity 
+
+and out-of-band interference attenuation performance are kept optimal despite the manufacturing process tolerances. The IF 
+
+bandwidth is fixed at 330 kHz when the device works at 433.92 MHz. 
+
+5.3.3 RSSI 
+
+The subsequent multistage I/Q Log amplifiers enhance the output signal from IF filter before it is fed for demodulation. Receive 
+
+Signal Strength Indicator (RSSI) generators are included in both Log amplifiers which produce DC voltages that are directly 
+
+proportional to the input signal level in both of I and Q path. The resulting RSSI is a sum of both these two paths. Extending from 
+
+the nominal sensitivity level, the RSSI achieves dynamic range over 66 dB. 
+
+5.3.4 SAR ADC 
+
+The on-chip 8-bit SAR ADC digitalizes the RSSI for OOK demodulation. 
+
+5.3.5 Crystal Oscillator 
+
+The CMT2210LC uses a 1-pin crystal oscillator circuit with the required crystal load capacitance fully integrated. The 
+
+recommended specification for the crystal is 27.1383/19.7008 MHz with ±20 ppm, ESR (Rm) <  60 Ω, with 15 pF load 
+capacitance. 
+
+Rev 0.9 | Page 11/20 
+
+www.cmostek.com 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+CMT2210LC 
+
+If a 27.1383/19.7008 MHz RCLK (reference clock) is available in the system, the user can directly use it to drive the CMT2210LC 
+
+by feeding the clock into the chip via the XIN pin. This further saves the system cost due to the removal of the crystal. A coupling 
+
+capacitor is required if the RCLK is used. The recommended peak-to-peak amplitude of the RCLK is 0.3 to 0.7 V on the XIN pin.   
+
+5.3.6 Frequency Synthesizer 
+
+A fully integrated frequency synthesizer is used to generate the LO frequency for the down conversion I/Q mixer. Using the 
+
+19.7008 MHz or 27.1383 MHz reference clock provided by the crystal oscillator or the external clock source, the frequency 
+
+synthesizer can generate the frequencies of 315 and 433.92 MHz for the receiver.   
+
+Rev 0.9 | Page 12/20 
+
+www.cmostek.com 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+CMT2210LC 
+
+5.4  Periodical Operating 
+
+Based on the chip default settings in factory, CMT2210LC is in the duty cycle (Duty-Cycle) receiving mode by default, in which 
+
+the receiving state (RX) lasts for about 2 s, and then the reset process (RESET) lasts about 3 ms. In the duty cycle receiving 
+
+mode, the SDN pin is always pulled low, and the chip will automatically repeat the loop of SLEEP->XTAL->TUNE->RX-> SLEEP 
+
+after the power-on (PUP) process until the chip is powered off. This allows the chip to be recalibrated and tuned regularly in a 
+
+complicated and changeable environment to maintain the best performance. In the RX state, the chip will continue receiving RF 
+
+input signals and outputting demodulated data through the DOUT pin. For the operating timing and current consumption of the 
+
+chip in duty cycle receiving mode, please refer to the figure below for details. 
+
+3.8 mA 
+
+3.8 mA 
+
+2.0 mA 
+
+2.0 mA 
+
+900 uA 
+
+300 nA 
+
+520 uA 
+
+PUP 
+
+SLEEP 
+
+XTAL 
+
+TUNE 
+
+TSTART-UP (3 ms) 
+
+300 nA 
+
+520 uA 
+
+RX 
+
+TRX (2 s) 
+
+SLEEP 
+
+XTAL 
+
+TUNE 
+
+RX State 
+
+TRESET(3 ms) 
+
+TRX ( 2 s) 
+
+Figure 10-1. Chip Operating Timing and Current Consumption in Duty Cycle Mode   
+
+(SDN pin is always pulled low) 
+
+The advantages of the duty cycle receiving mode are as follows: 
+
+ 
+
+ 
+
+By periodically re-tuning the frequency, it can keep the chip performance in an optimized state. 
+By resetting most modules through periodic reset, it can increase the system stability. 
+
+Through pulling up and down the SDN pin periodically, it can control the chip to operate periodically. This co-working with the duty 
+
+cycle mode will make the operating timing more complicated as shown in the figure below.   
+
+Figure 10-2. Chip Operating Timing and Current Consumption in Duty Cycle Receiving Mode   
+
+(controlled by SDN pin) 
+
+Rev 0.9 | Page 13/20 
+
+www.cmostek.com 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+It can be seen that when the SDN pin is kept low, the chip will work periodically according to default configuration. That is, after a 
+
+power-on lasting for 2 s, there is a reset process lasting for 3 ms. When the SDN pin is pulled high, the configured periodic 
+
+operating mode by default is broken. During the period when the SDN pin is pulled high, the chip enters and then remains in the 
+
+SLEEP state, and the DOUT pin outputs invalid data. When the SDN pin is pulled low again, the chip restarts and continues to 
+
+operate in the duty cycle receiving mode. 
+
+CMT2210LC 
+
+Rev 0.9 | Page 14/20 
+
+www.cmostek.com 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+CMT2210LC 
+
+6.  Ordering Information 
+
+Table 9. CMT2210LC Ordering Information 
+
+Part Number 
+
+Descriptions 
+
+Package 
+
+Package 
+
+Operating 
+
+Type 
+
+Option 
+
+Condition 
+
+MOQ/Multiple 
+
+CMT2210LC-ESR[1] 
+
+CMT2210LC-ESB[1] 
+
+Low power 315/433.92 MHz 
+
+OOK Receiver 
+
+Low power 315/433.92 MHz 
+
+OOK Receiver 
+
+SOP8 
+
+Tape & Reel 
+
+SOP8 
+
+Tube 
+
+1.8 to 3.6 V,   
+-40 to 85  ℃ 
+
+1.8 to 3.6 V,   
+-40 to 85  ℃ 
+
+2,500 
+
+1,000 
+
+Note: 
+[1].  “E” stands for extended industrial product grade, which supports the temperature range from -40 to +85  ℃. 
+
+“S” stands for the package type of SOP8. 
+
+“R” stands for the tape and reel package option, the minimum order quantity (MOQ) for this option is 2,500 pieces. “B” 
+
+stands for the tube package option, the minimum order quantity (MOQ) for this option is 1,000 pieces. 
+
+If the CMT2210LC-ESR cannot meet the application requirements, the user can order other CMT2210x products with 
+
+SPI interface for self-customizing with the RFPDK. 
+
+Visit www.cmostek.com/products/wireless to know more about the product and product line. 
+
+Contact sales@cmostek.com or your local sales representatives for more information. 
+
+Rev 0.9 | Page 15/20 
+
+www.cmostek.com 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+7.  Package Outline 
+
+The SOP8 illustrates the package details for the CMT2210LC. The table below lists the values for the dimensions shown in the 
+
+illustration. 
+
+CMT2210LC 
+
+Figure 11. SOP8 Package 
+
+Table 10. SOP8 Package Dimensions   
+
+Symbol 
+
+Size (millimeters) 
+
+A 
+
+A1 
+
+A2 
+
+A3 
+
+b 
+
+c 
+
+D 
+
+E 
+
+E1 
+
+e 
+
+h 
+
+L 
+
+L1 
+
+θ 
+
+Min 
+
+- 
+
+0.10 
+
+1.30 
+
+0.60 
+
+0.39 
+
+0.21 
+
+4.70 
+
+5.80 
+
+3.70 
+
+0.25 
+
+0.50 
+
+0 
+
+Typ 
+
+- 
+
+- 
+
+1.40 
+
+0.65 
+
+- 
+
+- 
+
+4.90 
+
+6.00 
+
+3.90 
+
+1.27 BSC 
+
+- 
+
+- 
+
+1.05 BSC 
+
+- 
+
+Max 
+
+1.75 
+
+0.225 
+
+1.50 
+
+0.70 
+
+0.48 
+
+0.26 
+
+5.10 
+
+6.20 
+
+4.10 
+
+0.50 
+
+0.80 
+
+8° 
+
+Rev 0.9 | Page 16/20 
+
+www.cmostek.com 
+
+D
+
+A3
+
+A2 A
+
+A1
+
+c
+
+θ
+
+0.25
+
+h
+
+L
+
+L1
+
+E1 E
+
+b
+
+e
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+8.  Top Marking 
+
+CMT2210LC 
+
+Figure 12. CMT2210LC Top Marking 
+
+Table 11. CMT2210LC Top Marking Explanation 
+
+Mark Method   
+
+Laser 
+
+Pin 1 Mark   
+
+Circle’s diameter = 1 mm 
+
+Font Height 
+
+Font Width 
+
+0.6 mm, right-justified 
+
+0.4 mm 
+
+Line 1 Marking   
+
+CMT2210LC, represents part number CMT2210LC 
+
+YYWW is the Date code assigned by the assembly house. YY represents the last two digits of the mold 
+
+Line 2 Marking   
+
+year and WW represents the workweek.   
+①②③④⑤⑥  is the internal tracking number 
+
+Rev 0.9 | Page 17/20 
+
+www.cmostek.com 
+
+CMT2210LC
+①②③④⑤⑥
+
+YYWW
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+CMT2210LC 
+
+9.  Other Documentations 
+
+Table 12. Other Documentations for CMT2210LC 
+
+Brief 
+
+AN107 
+
+AN110 
+
+Name 
+
+Descriptions 
+
+CMT221x Schematic and PCB Layout 
+
+Design Guideline 
+
+CMT221x-5x Schematic and PCB 
+
+Layout Design Guideline 
+
+Details of CMT2210/13/17/19A and CMT2210L/Lx PCB 
+
+schematic and layout design rules, RF matching network and 
+
+other application layout design related issues. English edition. 
+
+Details of CMT221x and CMT225x PCB schematic and layout 
+
+design rules, RF matching network and other application layout 
+
+design related issues. Chinese edition. 
+
+Rev 0.9 | Page 18/20 
+
+www.cmostek.com 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+CMT2210LC 
+
+10. Document Change List 
+
+Table 13. Document Change List 
+
+Rev. No. 
+
+Chapter 
+
+Description of Changes 
+
+0.6 
+
+0.7 
+
+0.8 
+
+0.9 
+
+All 
+
+All 
+
+All 
+
+5.4 and all 
+
+Initial released version 
+
+Added the Support of 315 MHz 
+
+Update the supply voltage, temperature range 
+
+Add description of periodically operating (English version updated 
+
+in 2021 ) 
+
+Date 
+
+2015-12-23 
+
+2016-02-25 
+
+2016-12-27 
+
+2017-08-17 
+
+Rev 0.9 | Page 19/20 
+
+www.cmostek.com 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+11. Contact Information 
+
+CMOSTEK Microelectronics Co., Ltd. Shenzhen Branch 
+
+Address:     
+
+30th floor of 8th Building, C Zone, Vanke Cloud City, Xili Sub-district, Nanshan, Shenzhen, GD, P.R. China     
+
+CMT2210LC 
+
+Tel:     
+
++86-755-83231427 
+
+Post Code: 
+
+518055 
+
+Sales: 
+
+sales@cmostek.com 
+
+Supports:   
+
+Website: 
+
+support@cmostek.com 
+www.cmostek.com 
+
+Copyright. CMOSTEK Microelectronics Co., Ltd. All rights are reserved. 
+
+The information furnished by CMOSTEK is believed to be accurate and reliable. However, no responsibility is assumed for 
+
+inaccuracies and specifications within this document are subject to change without notice. The material contained herein is 
+
+the exclusive property of CMOSTEK and shall not be distributed, reproduced, or disclosed in whole or in part without prior 
+
+written  permission  of  CMOSTEK.  CMOSTEK  products  are  not  authorized  for  use  as  critical  components  in  life  support 
+
+devices  or  systems  without  express  written  approval  of  CMOSTEK.  The  CMOSTEK  logo  is  a  registered  trademark  of 
+
+CMOSTEK Microelectronics Co., Ltd. All other names are the property of their respective owners. 
+
+Rev 0.9 | Page 20/20 
+
+www.cmostek.com 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
