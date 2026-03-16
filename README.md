@@ -19,15 +19,17 @@ All pin numbers below refer to the **40‑pin J1 header**:
   - Physical pin **17** (`3V3`)
 - **RF module GND** → any ground pin, e.g. physical pin **6**
 - **RF module DATA** → **BCM 17**, which is **physical pin 11**
+- **RF module enable (TX enable)** → **BCM 27**, which is **physical pin 13** (driven HIGH only while transmitting)
 
-The transmitter module must accept **3.3 V logic** on its DATA input. Power from 3V3 unless you are certain the specific module requires 5 V and is 3V3‑safe on DATA.
+The transmitter module must accept **3.3 V logic** on its DATA and enable inputs. Power from 3V3 unless you are certain the specific module requires 5 V and is 3V3‑safe on DATA.
 
 ### Software components
 
 - `crowdsync_tx.py`
   - Minimal OOK bitstream transmitter using `RPi.GPIO`
   - Configurable:
-    - GPIO pin (default **BCM 17**, physical pin 11)
+    - Data GPIO pin (default **BCM 17**, physical pin 11)
+    - Enable GPIO pin (default **BCM 27**, physical pin 13); must be HIGH during transmit
     - Bitrate (default **3000 bps**, valid 1–5000 bps)
     - Payload, as either:
       - Hex (`--hex A5F0FF`)
@@ -71,6 +73,7 @@ python3 crowdsync_tx.py \
 Command‑line options:
 
 - `--pin` – BCM GPIO number for DATA (default `17`)
+- `--enable-pin` – BCM GPIO number for TX enable (default `27`)
 - `--bitrate` – bit rate in bps (1–5000, default `3000`)
 - `--hex` – hex payload to send (one of `--hex` or `--pattern` is required)
 - `--pattern` – explicit 0/1 bit pattern

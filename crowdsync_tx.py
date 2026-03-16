@@ -19,7 +19,8 @@ You can use this to:
 
 Default wiring assumptions (Raspberry Pi 4/5, 40-pin header):
   - DATA from the 433/443 MHz OOK TX module → BCM 17 (physical pin 11)
-  - Module VCC → 3.3 V (or 5 V only if your module’s DATA input is 3.3 V safe)
+  - Enable (TX enable) → BCM 27 (physical pin 13); driven HIGH while transmitting
+  - Module VCC → 3.3 V (3V3 pin 1 of GPIO header)
   - Module GND → any ground pin (e.g. physical pin 6)
 """
 
@@ -37,7 +38,8 @@ else:
     _IMPORT_ERROR = None
 
 
-DEFAULT_GPIO_PIN = 17  # BCM numbering
+DEFAULT_GPIO_PIN = 17  # BCM numbering (data)
+DEFAULT_ENABLE_PIN = 27  # BCM numbering; must be HIGH during transmit
 DEFAULT_BITRATE = 3000  # bits per second (within 1–5 kbps CMT2210LC range)
 
 
@@ -61,27 +63,36 @@ class OokTransmitter:
 
     Assumptions:
       - External RF module handles RF carrier generation at ~433–443 MHz.
-      - This class controls only the DATA pin (keying the carrier on/off).
-      - Logic HIGH on GPIO = carrier ON, logic LOW = carrier OFF.
+      - DATA pin keys the carrier on/off; enable pin must be HIGH during transmit.
+      - Logic HIGH on DATA = carrier ON, logic LOW = carrier OFF.
       - NRZ coding: each bit occupies a full bit period at fixed level.
     """
 
-    def __init__(self, gpio_pin: int = DEFAULT_GPIO_PIN, bitrate: int = DEFAULT_BITRATE):
+    def __init__(
+        self,
+        gpio_pin: int = DEFAULT_GPIO_PIN,
+        enable_pin: int = DEFAULT_ENABLE_PIN,
+        bitrate: int = DEFAULT_BITRATE,
+    ):
         require_gpio()
         if bitrate <= 0:
             raise ValueError("bitrate must be > 0")
 
         self.gpio_pin = gpio_pin
+        self.enable_pin = enable_pin
         self.bitrate = bitrate
         self.bit_period = 1.0 / float(bitrate)
 
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.gpio_pin, GPIO.OUT, initial=GPIO.LOW)
+        GPIO.setup(self.enable_pin, GPIO.OUT, initial=GPIO.LOW)
 
     def cleanup(self) -> None:
         """Release GPIO resources."""
         GPIO.output(self.gpio_pin, GPIO.LOW)
+        GPIO.output(self.enable_pin, GPIO.LOW)
         GPIO.cleanup(self.gpio_pin)
+        GPIO.cleanup(self.enable_pin)
 
     def send_bit(self, bit: int) -> None:
         """Send a single bit (0 or 1) using OOK."""
@@ -92,6 +103,7 @@ class OokTransmitter:
     def send_bits(self, bits: Iterable[int], repeat: int = 1, gap_bits: int = 0) -> None:
         """
         Send a sequence of bits, optionally repeating with a gap.
+        Enable pin is driven HIGH for the full transmission and LOW when done.
 
         - bits: iterable of 0/1 integers
         - repeat: send the full sequence this many times
@@ -101,6 +113,7 @@ class OokTransmitter:
         if not bit_seq:
             return
 
+        GPIO.output(self.enable_pin, GPIO.HIGH)
         try:
             for _ in range(max(1, repeat)):
                 for b in bit_seq:
@@ -109,6 +122,8 @@ class OokTransmitter:
                     self.send_bit(0)
         finally:
             GPIO.output(self.gpio_pin, GPIO.LOW)
+            GPIO.output(self.enable_pin, GPIO.LOW)
+
 
 
 def hex_to_bits(hex_string: str, msb_first: bool = True) -> List[int]:
@@ -146,7 +161,13 @@ def parse_args(argv: List[str]) -> argparse.Namespace:
         "--pin",
         type=int,
         default=DEFAULT_GPIO_PIN,
-        help=f"BCM GPIO pin connected to the RF module data input (default: {DEFAULT_GPIO_PIN})",
+        help=f"BCM GPIO pin for RF module data input (default: {DEFAULT_GPIO_PIN})",
+    )
+    parser.add_argument(
+        "--enable-pin",
+        type=int,
+        default=DEFAULT_ENABLE_PIN,
+        help=f"BCM GPIO pin for TX enable, driven HIGH while transmitting (default: {DEFAULT_ENABLE_PIN})",
     )
     parser.add_argument(
         "--bitrate",
@@ -235,7 +256,11 @@ def main(argv: List[str]) -> int:
         return 1
 
     try:
-        tx = OokTransmitter(gpio_pin=args.pin, bitrate=args.bitrate)
+        tx = OokTransmitter(
+            gpio_pin=args.pin,
+            enable_pin=args.enable_pin,
+            bitrate=args.bitrate,
+        )
     except GpioUnavailableError as exc:
         print(str(exc), file=sys.stderr)
         return 1
@@ -244,7 +269,8 @@ def main(argv: List[str]) -> int:
         return 1
 
     print(
-        f"Transmitting {len(bits)} bits at {args.bitrate} bps on GPIO {args.pin}, "
+        f"Transmitting {len(bits)} bits at {args.bitrate} bps "
+        f"(data=GPIO {args.pin}, enable=GPIO {args.enable_pin}), "
         f"repeat={args.repeat}, gap_bits={args.gap_bits}..."
     )
     try:
