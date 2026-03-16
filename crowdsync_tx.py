@@ -378,8 +378,9 @@ def parse_args(argv: List[str]) -> argparse.Namespace:
     parser.add_argument(
         "--dmx-scan-channel",
         type=int,
-        default=0,
-        help="Which channel index (0-based) to sweep in DMX scan (default: 0 = first).",
+        default=-1,
+        metavar="N",
+        help="Channel index (0-based) to sweep in DMX scan; -1 = sweep all channels (default).",
     )
 
     args = parser.parse_args(argv)
@@ -397,9 +398,11 @@ def parse_args(argv: List[str]) -> argparse.Namespace:
             parser.error("--dmx-start-addr must be 1–512")
         if not (1 <= args.dmx_num_channels <= 512):
             parser.error("--dmx-num-channels must be 1–512")
-        if not (0 <= args.dmx_scan_channel < args.dmx_num_channels):
+        if args.dmx_scan_channel != -1 and not (
+            0 <= args.dmx_scan_channel < args.dmx_num_channels
+        ):
             parser.error(
-                "--dmx-scan-channel must be 0 to (dmx-num-channels - 1)"
+                "--dmx-scan-channel must be -1 (all) or 0 to (dmx-num-channels - 1)"
             )
 
     mode_count = sum(
@@ -495,22 +498,30 @@ def build_dmx_payload(
 
 
 def run_dmx_scan(args: argparse.Namespace, tx: OokTransmitter) -> None:
-    """Scan one DMX channel 0–255 over 433 MHz; other channels zero."""
+    """Scan DMX channel(s) 0–255 over 433 MHz; other channels zero. If scan_channel is -1, sweep all channels."""
     start_addr = args.dmx_start_addr  # 1-based first channel index
     num_channels = args.dmx_num_channels
-    scan_channel = args.dmx_scan_channel  # 0-based index of channel to sweep
-    if scan_channel >= num_channels:
-        raise ValueError("dmx-scan-channel must be < dmx-num-channels")
+    scan_channel = args.dmx_scan_channel  # 0-based index, or -1 for all
     progress_interval = 16
 
-    for value in range(256):
-        channels = [0] * num_channels
-        channels[scan_channel] = value
-        payload = build_dmx_payload(channels, start_code=args.dmx_start_code)
-        bits = bytes_to_bits(payload, msb_first=args.msb_first)
-        tx.send_bits(bits, repeat=args.repeat, gap_bits=args.gap_bits)
-        if value % progress_interval == 0 or value == 255:
-            print(f"DMX scan channel {start_addr + scan_channel}={value}/255")
+    channel_indices: List[int] = (
+        list(range(num_channels)) if scan_channel == -1 else [scan_channel]
+    )
+
+    for ch_idx in channel_indices:
+        for value in range(256):
+            channels = [0] * num_channels
+            channels[ch_idx] = value
+            payload = build_dmx_payload(channels, start_code=args.dmx_start_code)
+            bits = bytes_to_bits(payload, msb_first=args.msb_first)
+            tx.send_bits(bits, repeat=args.repeat, gap_bits=args.gap_bits)
+            if value % progress_interval == 0 or value == 255:
+                print(
+                    f"DMX scan channel {start_addr + ch_idx}={value}/255 "
+                    f"(channel index {ch_idx})"
+                )
+        if len(channel_indices) > 1:
+            print(f"DMX scan channel {start_addr + ch_idx} complete.")
 
     print("DMX scan complete.")
 
@@ -621,9 +632,14 @@ def main(argv: List[str]) -> int:
 
     try:
         if args.dmx_scan:
+            ch_desc = (
+                "all channels"
+                if args.dmx_scan_channel == -1
+                else f"channel index {args.dmx_scan_channel}"
+            )
             print(
                 f"DMX scan over 433 MHz: start-addr={args.dmx_start_addr}, "
-                f"channels={args.dmx_num_channels}, sweep channel index {args.dmx_scan_channel} (0–255), "
+                f"channels={args.dmx_num_channels}, sweep {ch_desc} (0–255 each), "
                 f"bitrate={args.bitrate} bps (data=GPIO {args.pin})."
             )
             run_dmx_scan(args, tx)
