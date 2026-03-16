@@ -319,8 +319,29 @@ def parse_args(argv: List[str]) -> argparse.Namespace:
         default=4,
         help="Number of EV1527 frame repeats (default: 4).",
     )
+    parser.add_argument(
+        "--ev1527-scan",
+        action="store_true",
+        help="EV1527 scan mode: cycle through all 16 codes (and optional ID range) quickly.",
+    )
+    parser.add_argument(
+        "--ev1527-id-end",
+        type=lambda x: int(x, 0),
+        default=None,
+        help="EV1527 scan end ID (inclusive). If set with --ev1527-scan, scan IDs from --ev1527-id to this; otherwise scan only --ev1527-id.",
+    )
+    parser.add_argument(
+        "--ev1527-fast",
+        action="store_true",
+        help="Use minimal repeats in EV1527 scan (1 frame repeat, 1 transmission repeat) for speed.",
+    )
 
     args = parser.parse_args(argv)
+
+    if args.ev1527_id_end is not None and not args.ev1527_scan:
+        parser.error("--ev1527-id-end only applies with --ev1527-scan")
+    if args.ev1527_fast and not args.ev1527_scan:
+        parser.error("--ev1527-fast only applies with --ev1527-scan")
 
     mode_count = sum(
         [
@@ -329,12 +350,17 @@ def parse_args(argv: List[str]) -> argparse.Namespace:
             args.pattern is not None,
             args.pulses is not None,
             args.ev1527,
+            args.ev1527_scan,
         ]
     )
     if mode_count == 0:
-        parser.error("you must provide one of: --hex, --pattern, --scan, --pulses, --ev1527")
+        parser.error(
+            "you must provide one of: --hex, --pattern, --scan, --pulses, --ev1527, --ev1527-scan"
+        )
     if mode_count > 1:
-        parser.error("use only one of: --hex, --pattern, --scan, --pulses, --ev1527")
+        parser.error(
+            "use only one of: --hex, --pattern, --scan, --pulses, --ev1527, --ev1527-scan"
+        )
     if args.scan and (args.hex_payload is not None or args.pattern is not None):
         parser.error("do not use --hex or --pattern with --scan")
     if args.hex_payload is not None and args.pattern is not None:
@@ -349,6 +375,14 @@ def parse_args(argv: List[str]) -> argparse.Namespace:
             parser.error("--ev1527-code must be 0–15")
         if args.ev1527_repeat < 1:
             parser.error("--ev1527-repeat must be >= 1")
+    if args.ev1527_scan:
+        if not (0 <= args.ev1527_id <= 0xFFFFF):
+            parser.error("--ev1527-id must be 0–1048575 (20-bit)")
+        if args.ev1527_id_end is not None:
+            if not (0 <= args.ev1527_id_end <= 0xFFFFF):
+                parser.error("--ev1527-id-end must be 0–1048575 (20-bit)")
+            if args.ev1527_id_end < args.ev1527_id:
+                parser.error("--ev1527-id-end must be >= --ev1527-id")
 
     return args
 
@@ -388,6 +422,27 @@ def run_scan(args: argparse.Namespace, tx: OokTransmitter) -> None:
             print(f"Scan 0x{value:06X} / 0xFFFFFF")
 
     print("Scan complete.")
+
+
+def run_ev1527_scan(args: argparse.Namespace, tx: OokTransmitter) -> None:
+    """Cycle through EV1527 (ID, code) combinations: 16 codes per ID, optional ID range."""
+    id_start = args.ev1527_id
+    id_end = args.ev1527_id if args.ev1527_id_end is None else args.ev1527_id_end
+    frame_repeat = 1 if args.ev1527_fast else 4
+    tx_repeat = 1 if args.ev1527_fast else max(1, args.repeat)
+    total = (id_end - id_start + 1) * 16
+    progress_interval = 16  # print every 16 codes (one full ID)
+
+    sent = 0
+    for dev_id in range(id_start, id_end + 1):
+        for code in range(16):
+            pulse_us = ev1527_pulses(dev_id, code, repeat=frame_repeat)
+            tx.send_pulses(pulse_us, repeat=tx_repeat)
+            sent += 1
+        if (sent % progress_interval) == 0 or sent == total:
+            print(f"EV1527 scan {sent}/{total} (ID=0x{dev_id:05X} code=0–15)")
+
+    print("EV1527 scan complete.")
 
 
 def main(argv: List[str]) -> int:
@@ -441,7 +496,16 @@ def main(argv: List[str]) -> int:
         return 1
 
     try:
-        if args.scan:
+        if args.ev1527_scan:
+            id_end = args.ev1527_id if args.ev1527_id_end is None else args.ev1527_id_end
+            total = (id_end - args.ev1527_id + 1) * 16
+            print(
+                f"EV1527 scan: ID 0x{args.ev1527_id:05X}–0x{id_end:05X}, "
+                f"16 codes each ({total} combinations), "
+                f"fast={args.ev1527_fast} (data=GPIO {args.pin})."
+            )
+            run_ev1527_scan(args, tx)
+        elif args.scan:
             print(
                 f"Scan mode: 4-byte frames (prefix=0x{args.scan_prefix:02X}, "
                 f"counter 0x000000–0xFFFFFF) at {args.bitrate} bps, "
