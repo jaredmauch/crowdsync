@@ -16,6 +16,7 @@ You can use this to:
   - Generate test patterns (preambles, repeating codes)
   - Capture the corresponding waveforms on a logic analyzer / SDR
   - Reverse engineer the actual CrowdSync frame format and LED commands
+  - Send DMX512-style channel data (R,G,B etc.) over 433 MHz OOK (--dmx, --dmx-scan)
 
 Default wiring assumptions (Raspberry Pi 4/5, 40-pin header):
   - DATA from the 433/443 MHz OOK TX module → BCM 17 (physical pin 11)
@@ -335,6 +336,51 @@ def parse_args(argv: List[str]) -> argparse.Namespace:
         action="store_true",
         help="Use minimal repeats in EV1527 scan (1 frame repeat, 1 transmission repeat) for speed.",
     )
+    # DMX512-style channel data over 433 MHz OOK
+    parser.add_argument(
+        "--dmx",
+        dest="dmx_channels",
+        type=str,
+        default=None,
+        metavar="CHANNELS",
+        help="DMX512-style channel values over 433 MHz: comma-separated 0–255 (e.g. '255,0,128' for R,G,B).",
+    )
+    parser.add_argument(
+        "--dmx-start-code",
+        action="store_true",
+        default=True,
+        dest="dmx_start_code",
+        help="Prepend DMX null start code 0x00 to channel payload (default: True).",
+    )
+    parser.add_argument(
+        "--no-dmx-start-code",
+        action="store_false",
+        dest="dmx_start_code",
+        help="Omit DMX start code; send only channel bytes.",
+    )
+    parser.add_argument(
+        "--dmx-scan",
+        action="store_true",
+        help="DMX scan over 433 MHz: sweep one channel 0–255, others zero.",
+    )
+    parser.add_argument(
+        "--dmx-start-addr",
+        type=int,
+        default=1,
+        help="DMX start address (1-based) for scan; first channel index (default: 1).",
+    )
+    parser.add_argument(
+        "--dmx-num-channels",
+        type=int,
+        default=3,
+        help="Number of DMX channels (e.g. 3 for RGB, 4 for RGBW) in scan (default: 3).",
+    )
+    parser.add_argument(
+        "--dmx-scan-channel",
+        type=int,
+        default=0,
+        help="Which channel index (0-based) to sweep in DMX scan (default: 0 = first).",
+    )
 
     args = parser.parse_args(argv)
 
@@ -342,6 +388,19 @@ def parse_args(argv: List[str]) -> argparse.Namespace:
         parser.error("--ev1527-id-end only applies with --ev1527-scan")
     if args.ev1527_fast and not args.ev1527_scan:
         parser.error("--ev1527-fast only applies with --ev1527-scan")
+    if args.dmx_scan and args.dmx_channels is not None:
+        parser.error("use either --dmx or --dmx-scan, not both")
+    if args.dmx_channels is not None and not args.dmx_scan:
+        pass  # --dmx without --dmx-scan
+    if args.dmx_scan:
+        if not (1 <= args.dmx_start_addr <= 512):
+            parser.error("--dmx-start-addr must be 1–512")
+        if not (1 <= args.dmx_num_channels <= 512):
+            parser.error("--dmx-num-channels must be 1–512")
+        if not (0 <= args.dmx_scan_channel < args.dmx_num_channels):
+            parser.error(
+                "--dmx-scan-channel must be 0 to (dmx-num-channels - 1)"
+            )
 
     mode_count = sum(
         [
@@ -351,15 +410,19 @@ def parse_args(argv: List[str]) -> argparse.Namespace:
             args.pulses is not None,
             args.ev1527,
             args.ev1527_scan,
+            args.dmx_channels is not None,
+            args.dmx_scan,
         ]
     )
     if mode_count == 0:
         parser.error(
-            "you must provide one of: --hex, --pattern, --scan, --pulses, --ev1527, --ev1527-scan"
+            "you must provide one of: --hex, --pattern, --scan, --pulses, "
+            "--ev1527, --ev1527-scan, --dmx, --dmx-scan"
         )
     if mode_count > 1:
         parser.error(
-            "use only one of: --hex, --pattern, --scan, --pulses, --ev1527, --ev1527-scan"
+            "use only one of: --hex, --pattern, --scan, --pulses, "
+            "--ev1527, --ev1527-scan, --dmx, --dmx-scan"
         )
     if args.scan and (args.hex_payload is not None or args.pattern is not None):
         parser.error("do not use --hex or --pattern with --scan")
@@ -401,6 +464,55 @@ def build_bit_sequence(args: argparse.Namespace) -> List[int]:
 def parse_pulses_arg(pulses_str: str) -> List[int]:
     """Parse comma-separated list of pulse durations in µs."""
     return [int(s.strip(), 10) for s in pulses_str.split(",") if s.strip()]
+
+
+# DMX512-style channel data over 433 MHz OOK (channel bytes sent as RF payload, not wired DMX)
+def parse_dmx_channels(s: str) -> List[int]:
+    """Parse comma- or space-separated channel values (0–255)."""
+    parts = s.replace(",", " ").split()
+    out: List[int] = []
+    for p in parts:
+        v = int(p.strip(), 0)
+        if not (0 <= v <= 255):
+            raise ValueError(f"DMX channel value must be 0–255, got {v}")
+        out.append(v)
+    return out
+
+
+def build_dmx_payload(
+    channel_values: List[int],
+    start_code: bool = True,
+) -> List[int]:
+    """
+    Build DMX512-style byte payload for RF: optional null start code (0x00) + channel bytes.
+    Returns list of byte values (0–255) to send over OOK.
+    """
+    payload: List[int] = []
+    if start_code:
+        payload.append(0x00)
+    payload.extend(channel_values)
+    return payload
+
+
+def run_dmx_scan(args: argparse.Namespace, tx: OokTransmitter) -> None:
+    """Scan one DMX channel 0–255 over 433 MHz; other channels zero."""
+    start_addr = args.dmx_start_addr  # 1-based first channel index
+    num_channels = args.dmx_num_channels
+    scan_channel = args.dmx_scan_channel  # 0-based index of channel to sweep
+    if scan_channel >= num_channels:
+        raise ValueError("dmx-scan-channel must be < dmx-num-channels")
+    progress_interval = 16
+
+    for value in range(256):
+        channels = [0] * num_channels
+        channels[scan_channel] = value
+        payload = build_dmx_payload(channels, start_code=args.dmx_start_code)
+        bits = bytes_to_bits(payload, msb_first=args.msb_first)
+        tx.send_bits(bits, repeat=args.repeat, gap_bits=args.gap_bits)
+        if value % progress_interval == 0 or value == 255:
+            print(f"DMX scan channel {start_addr + scan_channel}={value}/255")
+
+    print("DMX scan complete.")
 
 
 def run_scan(args: argparse.Namespace, tx: OokTransmitter) -> None:
@@ -482,6 +594,18 @@ def main(argv: List[str]) -> int:
             repeat=args.ev1527_repeat,
         )
 
+    dmx_bits: List[int] = []
+    if args.dmx_channels is not None:
+        try:
+            ch = parse_dmx_channels(args.dmx_channels)
+            if not ch:
+                raise ValueError("at least one DMX channel value required")
+            payload = build_dmx_payload(ch, start_code=args.dmx_start_code)
+            dmx_bits = bytes_to_bits(payload, msb_first=args.msb_first)
+        except Exception as exc:
+            print(f"Error parsing --dmx: {exc}", file=sys.stderr)
+            return 1
+
     try:
         tx = OokTransmitter(
             gpio_pin=args.pin,
@@ -496,7 +620,14 @@ def main(argv: List[str]) -> int:
         return 1
 
     try:
-        if args.ev1527_scan:
+        if args.dmx_scan:
+            print(
+                f"DMX scan over 433 MHz: start-addr={args.dmx_start_addr}, "
+                f"channels={args.dmx_num_channels}, sweep channel index {args.dmx_scan_channel} (0–255), "
+                f"bitrate={args.bitrate} bps (data=GPIO {args.pin})."
+            )
+            run_dmx_scan(args, tx)
+        elif args.ev1527_scan:
             id_end = args.ev1527_id if args.ev1527_id_end is None else args.ev1527_id_end
             total = (id_end - args.ev1527_id + 1) * 16
             print(
@@ -512,6 +643,14 @@ def main(argv: List[str]) -> int:
                 f"repeat={args.repeat}, gap_bits={args.gap_bits}. Progress every 0x100."
             )
             run_scan(args, tx)
+        elif args.dmx_channels is not None:
+            print(
+                f"Transmitting DMX-style payload ({len(dmx_bits)} bits) over 433 MHz "
+                f"at {args.bitrate} bps (data=GPIO {args.pin}), "
+                f"repeat={args.repeat}, gap_bits={args.gap_bits}..."
+            )
+            tx.send_bits(dmx_bits, repeat=args.repeat, gap_bits=args.gap_bits)
+            print("Done.")
         elif args.ev1527 or args.pulses is not None:
             n = len(pulse_us)
             print(

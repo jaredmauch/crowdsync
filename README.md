@@ -81,6 +81,8 @@ Command‑line options:
 - `--pattern` – explicit 0/1 bit pattern
 - `--pulses` – pulse-width mode: comma-separated high/low durations in µs
 - `--ev1527` – send EV1527-style frame (20-bit ID + 4-bit code); use with `--ev1527-id`, `--ev1527-code`, `--ev1527-repeat`
+- `--dmx` – DMX512-style channel data over 433 MHz: comma-separated 0–255 (e.g. `255,0,128` for R,G,B); optional `--no-dmx-start-code` to omit null start code
+- `--dmx-scan` – sweep one channel 0–255 over RF; use with `--dmx-start-addr`, `--dmx-num-channels`, `--dmx-scan-channel`
 - `--repeat` – number of times to send the full sequence
 - `--gap-bits` – number of zero bits between repeats (NRZ mode only)
 - `--msb-first` / `--lsb-first` – bit order within each byte for hex payloads
@@ -109,5 +111,6 @@ See **PROTOCOLS.md** for 433 MHz LED protocols (EV1527/PT2262), DMX-style RGB ch
 
 - Hardware and bit‑level TX scaffolding: **initial prototype complete**
 - Pulse-width and EV1527 modes: **added** for mirroring commodity 433 MHz LED remotes
+- DMX512-style over 433 MHz: **added** (`--dmx`, `--dmx-scan`) – channel bytes sent as OOK payload (not wired DMX)
 - CrowdSync protocol understanding: **TBD – requires captures and experimentation**
 
