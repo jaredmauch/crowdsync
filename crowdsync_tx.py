@@ -124,6 +124,59 @@ class OokTransmitter:
             GPIO.output(self.gpio_pin, GPIO.LOW)
             GPIO.output(self.enable_pin, GPIO.LOW)
 
+    def send_pulses(self, pulse_us: List[int], repeat: int = 1) -> None:
+        """
+        Send a sequence of high/low pulse durations (OOK pulse-width encoding).
+
+        pulse_us: alternating [high1, low1, high2, low2, ...] in microseconds.
+        repeat: send the full sequence this many times.
+        Enable pin is driven HIGH for the full transmission.
+        """
+        if not pulse_us:
+            return
+        GPIO.output(self.enable_pin, GPIO.HIGH)
+        try:
+            for _ in range(max(1, repeat)):
+                level = GPIO.HIGH
+                for duration_us in pulse_us:
+                    if duration_us <= 0:
+                        continue
+                    GPIO.output(self.gpio_pin, level)
+                    time.sleep(duration_us / 1_000_000.0)
+                    level = GPIO.LOW if level == GPIO.HIGH else GPIO.HIGH
+        finally:
+            GPIO.output(self.gpio_pin, GPIO.LOW)
+            GPIO.output(self.enable_pin, GPIO.LOW)
+
+
+# EV1527-style pulse-width encoding (common in 433 MHz LED remotes)
+# Timing in µs: short high = 275; low for 0 = 275, for 1 = 1225, sync = 2675
+EV1527_HIGH_US = 275
+EV1527_LOW_0_US = 275
+EV1527_LOW_1_US = 1225
+EV1527_SYNC_LOW_US = 2675
+
+
+def ev1527_pulses(id_20bit: int, data_4bit: int, repeat: int = 4) -> List[int]:
+    """
+    Build EV1527 pulse sequence (high/low µs) for 20-bit ID + 4-bit data.
+    One frame = sync + 24 bits MSB first; repeated `repeat` times.
+    """
+    # 24 bits: id_20bit (20 msb) then data_4bit (4 lsb)
+    bits: List[int] = []
+    for i in range(19, -1, -1):
+        bits.append((id_20bit >> i) & 1)
+    for i in range(3, -1, -1):
+        bits.append((data_4bit >> i) & 1)
+    pulse_list: List[int] = []
+    for _ in range(repeat):
+        # Sync
+        pulse_list.append(EV1527_HIGH_US)
+        pulse_list.append(EV1527_SYNC_LOW_US)
+        for b in bits:
+            pulse_list.append(EV1527_HIGH_US)
+            pulse_list.append(EV1527_LOW_1_US if b else EV1527_LOW_0_US)
+    return pulse_list
 
 
 def bytes_to_bits(byte_list: List[int], msb_first: bool = True) -> List[int]:
@@ -236,20 +289,66 @@ def parse_args(argv: List[str]) -> argparse.Namespace:
         default=3,
         help="First byte of each 4-byte frame in scan mode (default: 3).",
     )
+    parser.add_argument(
+        "--pulses",
+        type=str,
+        default=None,
+        metavar="US",
+        help="Pulse-width mode: comma-separated high/low durations in µs (e.g. '253,759,253,759').",
+    )
+    parser.add_argument(
+        "--ev1527",
+        action="store_true",
+        help="Send EV1527-style frame (20-bit ID + 4-bit data) for commodity 433 MHz LED remotes.",
+    )
+    parser.add_argument(
+        "--ev1527-id",
+        type=lambda x: int(x, 0),
+        default=0,
+        help="EV1527 20-bit ID (decimal or 0xhex). Default 0.",
+    )
+    parser.add_argument(
+        "--ev1527-code",
+        type=lambda x: int(x, 0),
+        default=0,
+        help="EV1527 4-bit data/code (0–15). Default 0.",
+    )
+    parser.add_argument(
+        "--ev1527-repeat",
+        type=int,
+        default=4,
+        help="Number of EV1527 frame repeats (default: 4).",
+    )
 
     args = parser.parse_args(argv)
 
-    if args.scan:
-        if args.hex_payload is not None or args.pattern is not None:
-            parser.error("do not use --hex or --pattern with --scan")
-    else:
-        if args.hex_payload is None and args.pattern is None:
-            parser.error("you must provide either --hex, --pattern, or --scan")
-        if args.hex_payload is not None and args.pattern is not None:
-            parser.error("use either --hex or --pattern, not both")
+    mode_count = sum(
+        [
+            args.scan,
+            args.hex_payload is not None,
+            args.pattern is not None,
+            args.pulses is not None,
+            args.ev1527,
+        ]
+    )
+    if mode_count == 0:
+        parser.error("you must provide one of: --hex, --pattern, --scan, --pulses, --ev1527")
+    if mode_count > 1:
+        parser.error("use only one of: --hex, --pattern, --scan, --pulses, --ev1527")
+    if args.scan and (args.hex_payload is not None or args.pattern is not None):
+        parser.error("do not use --hex or --pattern with --scan")
+    if args.hex_payload is not None and args.pattern is not None:
+        parser.error("use either --hex or --pattern, not both")
 
     if not (1 <= args.bitrate <= 5000):
         parser.error("bitrate must be between 1 and 5000 bps")
+    if args.ev1527:
+        if not (0 <= args.ev1527_id <= 0xFFFFF):
+            parser.error("--ev1527-id must be 0–1048575 (20-bit)")
+        if not (0 <= args.ev1527_code <= 15):
+            parser.error("--ev1527-code must be 0–15")
+        if args.ev1527_repeat < 1:
+            parser.error("--ev1527-repeat must be >= 1")
 
     return args
 
@@ -263,6 +362,11 @@ def build_bit_sequence(args: argparse.Namespace) -> List[int]:
     if any(c not in ("0", "1") for c in pattern):
         raise ValueError("pattern must contain only '0' and '1' characters")
     return [1 if c == "1" else 0 for c in pattern]
+
+
+def parse_pulses_arg(pulses_str: str) -> List[int]:
+    """Parse comma-separated list of pulse durations in µs."""
+    return [int(s.strip(), 10) for s in pulses_str.split(",") if s.strip()]
 
 
 def run_scan(args: argparse.Namespace, tx: OokTransmitter) -> None:
@@ -295,7 +399,8 @@ def main(argv: List[str]) -> int:
         print(f"Error: {exc}", file=sys.stderr)
         return 1
 
-    if not args.scan:
+    bits: List[int] = []
+    if args.hex_payload is not None or args.pattern is not None:
         try:
             bits = build_bit_sequence(args)
         except Exception as exc:
@@ -304,6 +409,23 @@ def main(argv: List[str]) -> int:
         if not bits:
             print("No bits to transmit (empty payload).", file=sys.stderr)
             return 1
+
+    pulse_us: List[int] = []
+    if args.pulses is not None:
+        try:
+            pulse_us = parse_pulses_arg(args.pulses)
+        except Exception as exc:
+            print(f"Error parsing --pulses: {exc}", file=sys.stderr)
+            return 1
+        if not pulse_us:
+            print("No pulses to transmit (empty --pulses).", file=sys.stderr)
+            return 1
+    if args.ev1527:
+        pulse_us = ev1527_pulses(
+            args.ev1527_id,
+            args.ev1527_code,
+            repeat=args.ev1527_repeat,
+        )
 
     try:
         tx = OokTransmitter(
@@ -326,6 +448,15 @@ def main(argv: List[str]) -> int:
                 f"repeat={args.repeat}, gap_bits={args.gap_bits}. Progress every 0x100."
             )
             run_scan(args, tx)
+        elif args.ev1527 or args.pulses is not None:
+            n = len(pulse_us)
+            print(
+                f"Transmitting {n} pulse durations (pulse-width OOK) "
+                f"(data=GPIO {args.pin}, enable=GPIO {args.enable_pin}), "
+                f"repeat={args.repeat}..."
+            )
+            tx.send_pulses(pulse_us, repeat=args.repeat)
+            print("Done.")
         else:
             print(
                 f"Transmitting {len(bits)} bits at {args.bitrate} bps "

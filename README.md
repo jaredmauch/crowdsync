@@ -31,11 +31,13 @@ The transmitter module must accept **3.3 V logic** on its DATA and enable inpu
     - Data GPIO pin (default **BCM 17**, physical pin 11)
     - Enable GPIO pin (default **BCM 27**, physical pin 13); must be HIGH during transmit
     - Bitrate (default **3000 bps**, valid 1–5000 bps)
-    - Payload, as either:
+    - Payload, as one of:
       - Hex (`--hex A5F0FF`)
       - Explicit bit pattern (`--pattern 10101010`)
-    - Repeat count and inter‑frame gap (in “gap bits”)
-  - Intended for use with an SDR/logic analyzer while we discover the actual CrowdSync protocol.
+      - **Pulse-width** (`--pulses 253,759,253,759,...`) – alternating high/low durations in µs
+      - **EV1527** (`--ev1527 --ev1527-id 0x12345 --ev1527-code 15`) – for commodity 433 MHz LED remotes
+    - Repeat count and inter‑frame gap (in “gap bits” for NRZ)
+  - Intended for use with an SDR/logic analyzer while we discover the actual CrowdSync protocol; pulse-width and EV1527 modes let you mirror common 433 MHz LED remote behavior (see **PROTOCOLS.md**).
 
 ### Installing dependencies
 
@@ -74,12 +76,16 @@ Command‑line options:
 
 - `--pin` – BCM GPIO number for DATA (default `17`)
 - `--enable-pin` – BCM GPIO number for TX enable (default `27`)
-- `--bitrate` – bit rate in bps (1–5000, default `3000`)
-- `--hex` – hex payload to send (one of `--hex` or `--pattern` is required)
+- `--bitrate` – bit rate in bps (1–5000, default `3000`); used for NRZ/hex/pattern/scan only
+- `--hex` – hex payload to send
 - `--pattern` – explicit 0/1 bit pattern
+- `--pulses` – pulse-width mode: comma-separated high/low durations in µs
+- `--ev1527` – send EV1527-style frame (20-bit ID + 4-bit code); use with `--ev1527-id`, `--ev1527-code`, `--ev1527-repeat`
 - `--repeat` – number of times to send the full sequence
-- `--gap-bits` – number of zero bits between repeats
-- `--msb-first` / `--lsb-first` – control bit order within each byte for hex payloads
+- `--gap-bits` – number of zero bits between repeats (NRZ mode only)
+- `--msb-first` / `--lsb-first` – bit order within each byte for hex payloads
+
+See **PROTOCOLS.md** for 433 MHz LED protocols (EV1527/PT2262), DMX-style RGB channel layout, and package references (rpi-rf, pilight, etc.).
 
 ### Reverse‑engineering workflow (planned)
 
@@ -90,8 +96,18 @@ Command‑line options:
    - Build valid frames from high‑level commands (e.g. set LED color/pattern)
    - Handle retries, IDs/groups, and any checksums
 
+### Protocol reference
+
+**PROTOCOLS.md** documents:
+
+- CMT2210LC constraints and OOK encoding options
+- Packages that mirror 433 MHz LED/switch behavior (rpi-rf, sendook, pilight, etc.)
+- EV1527/PT2262 pulse-width encoding (common in commodity LED remotes)
+- DMX512 RGB channel layout for protocol design
+
 ### Status
 
 - Hardware and bit‑level TX scaffolding: **initial prototype complete**
+- Pulse-width and EV1527 modes: **added** for mirroring commodity 433 MHz LED remotes
 - CrowdSync protocol understanding: **TBD – requires captures and experimentation**
 
